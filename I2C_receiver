@@ -1,0 +1,45 @@
+#include <Wire.h>
+
+#define I2C_ADDRESS 8
+#define LED_BUILTIN 2
+
+volatile byte receivedValue = 0;
+volatile bool newData = false;
+
+void receiveEvent(int numBytes) {
+  if (Wire.available()) {
+    receivedValue = Wire.read();
+    newData = true;
+  }
+}
+
+void setup() {
+  Serial.begin(115200);
+
+  pinMode(LED_BUILTIN, OUTPUT);
+  digitalWrite(LED_BUILTIN, LOW);
+
+  Wire.begin(I2C_ADDRESS);
+  Wire.onReceive(receiveEvent);
+
+  Serial.println("I2C Receiver Ready");
+}
+
+void loop() {
+
+  if (newData) {
+
+    // Copy the received value
+    byte value = receivedValue;
+    newData = false;
+
+    Serial.print("Received via I2C: ");
+    Serial.println(value);
+
+    // Blink LED when data is received
+    digitalWrite(LED_BUILTIN, HIGH);
+    delay(500);
+    digitalWrite(LED_BUILTIN, LOW);
+    delay(500);
+  }
+}
