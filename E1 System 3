@@ -1,0 +1,33 @@
+
+#define BUZZER_PIN  26      // 
+#define SENSOR_PIN  34      // 
+
+#define MIN_DURATION  200   // when voltage is at minimum
+#define MAX_DURATION  2000  // when voltage is at maximum
+
+void setup() {
+  Serial.begin(115200); // Begins serial so you can see stuff on the serial monitor and talk to it 
+  Serial.println("Ready, send frequency for tone: ");
+}
+
+void loop() {
+  if (Serial.available() > 0) {
+    // --- Input 1: tone frequency sent over Serial ---
+    int freq = Serial.parseInt();
+    if (freq <= 0) return;   // If something wrong is entered
+
+    // Reads the voltage from the sensor pin 
+    int read = analogRead(SENSOR_PIN);         
+    int duration = map(read, 0, 4095, MIN_DURATION, MAX_DURATION); // Maps the read from analog pin to actual duration within range we set 
+
+    Serial.printf("Freq: %lu Hz | Sensor raw: %d | Duration: %lu ms\n",
+                  freq, read, duration);
+
+    // --- Output: play the tone at that frequency for that duration ---
+    tone(BUZZER_PIN, freq, duration);
+    delay(duration);
+    
+
+    Serial.println("Done. Send next frequency:");
+  }
+}
