@@ -1,0 +1,29 @@
+/*
+ */
+#include <Wire.h>
+
+#define RECEIVER_ADDRESS 8
+
+byte value = 173;
+
+void setup() {
+  Wire.begin();
+
+  Serial.begin(115200);
+
+  Serial.println("I2C Sender Ready");
+}
+
+void loop() {
+
+  Wire.beginTransmission(RECEIVER_ADDRESS);
+
+  Wire.write(value);
+
+  Wire.endTransmission();
+
+  Serial.print("Sent: ");
+  Serial.println(value);
+
+  delay(1000);
+}
