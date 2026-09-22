@@ -1,0 +1,27 @@
+/*
+ */
+# define LED_BUILTIN 2
+void setup() {
+    Serial.begin(115200);
+    pinMode(LED_BUILTIN, OUTPUT);
+    Serial.println("Enter a number doofus: ");
+}
+
+void loop() {
+    if(Serial.available()>0){
+      int num = Serial.parseInt();
+      if(num <= 255 && num >= 0){
+        Serial.println(num);
+        for(int i = 0; i<5; i++){
+          digitalWrite(LED_BUILTIN, HIGH);
+          delay(300);
+          digitalWrite(LED_BUILTIN, LOW);
+          delay(300);
+        }
+      }
+      else{
+        Serial.println("Enter a number: ");
+      }
+      Serial.println("Enter a number: ");
+    }
+}
