@@ -1,0 +1,41 @@
+#include <ESP32Servo.h>
+
+Servo myServo;
+const int servoPin = 13;
+
+#define PULSE_WIDTH_MIN 500 // Correlates to 0 degrees
+#define PULSE_WIDTH_MAX 2000 //Correlates to 180 degrees
+void setup() {
+  Serial.begin(115200); // Starts serial so you can talk to the board
+
+
+  myServo.setPeriodHertz(50); // Standard servo hertz 
+  myServo.attach(servoPin, PULSE_WIDTH_MIN, PULSE_WIDTH_MAX);// Attatches the servo to its specific pin pulse width range
+  myServo.write(0); // Moves servo to 0 degrees
+  Serial.println("Enter an angle (0-180):");
+}
+
+void loop() {
+  if (Serial.available() > 0) {
+    int angle = Serial.parseInt();
+
+    // clear any leftover characters (e.g. newline)
+    while (Serial.available() > 0) {
+      Serial.read();
+      }
+
+    if (angle >= 0 && angle <= 180) {
+      Serial.print("Moving to ");
+      Serial.print(angle);
+      Serial.println(" degrees");
+
+      myServo.write(angle); // Moves servo to 
+      delay(2000); // Delays for 2 seconds
+      myServo.write(0); // Makes servo go back to 0 degrees 
+
+      Serial.println("Returned to 0. Enter an angle (0-180):");
+    } else {
+      Serial.println("Invalid. Enter a value between 0 and 180:");
+    }
+  }
+}
